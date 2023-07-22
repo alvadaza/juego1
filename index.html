@@ -10,21 +10,18 @@
     <style>
         body{
             margin: 0;
+            padding: 0;
             height: 100vh;
             width: 100%;
             display: grid;
             place-items: center;
-            counter-reset: game;
-        }
-        input:checked{
-            counter-increment: game;
-        }
-        .total-cont::after{
-            content: counter(game);
-        }
-        h1 {
             font-family: 'Cormorant Garamond', serif;
             font-style: italic;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #333;
             text-align: center;
             margin: 0px;
             padding: 30px 0 0 0;
@@ -70,21 +67,20 @@
                 bottom: 0;
             }
         }
-        input[type=checkbox] {
+        #botonContador {
             position: absolute;
             appearance: none;
             cursor: pointer;
+            background-color: transparent;
             margin: 0;
-            width: 80px;
-            height: 50px;
+            width: 40px;
+            height: 30px;
+            translate: -25px 20px;
+            border: none;
             top: 0;
-            z-index: 1;
+            z-index: 12;
         }
 
-        input[type=checkbox]:focus{
-            appearance: none;
-            outline: none;
-        }
         .layer-2{
             position: absolute;
             z-index: 2;
@@ -345,15 +341,45 @@
             background: #0ab315;
             z-index: -1
             }
+        #resultado {
+            font-size: 24px;
+            margin-top: 10px;
+            color: #333;
+        }
+          
+        #aviso {
+            font-size: 30px;
+            font-weight: bold;
+            color: #FF5733;
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f2f2f2;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 11;	
+        }
+        footer{
+            font-size: large;
+        }
       
     </style>
 </head>
 <body>
-    
     <div class="phone">
-        <h1>Animation Land</h1>
-        <div class="layer-1">
-            <input type="checkbox">
+        <h1>Tierra de Animacón</h1>
+        <p id="resultado"></p>
+        <div id="aviso" style="display: none;">
+            <p>¿Quieres jugar nuevamente?</p>
+            <br>
+            <button onclick="reiniciarConteo()">Sí</button>
+            <button onclick="cancelarReinicio()">No</button>
+        </div>
+        <div class="layer-1">   
+            <button id="botonContador" onclick="incrementarContador()"></button>
             <div class="left-ear--outer"></div>
             <div class="left-ear--inter"></div>
             <div class="right-ear--outer"></div>
@@ -364,7 +390,7 @@
             </div>
         </div>
         <div class="layer-2">
-            <input type="checkbox">
+            <button id="botonContador" onclick="incrementarContador()"></button>
             <div class="left-ear--outer"></div>
             <div class="left-ear--inter"></div>
             <div class="right-ear--outer"></div>
@@ -381,7 +407,7 @@
             </div>
         </div>
         <div class="layer-4">
-            <input type="checkbox">
+            <button id="botonContador" onclick="incrementarContador()"></button>
             <div class="left-ear--outer"></div>
             <div class="left-ear--inter"></div>
             <div class="right-ear--outer"></div>
@@ -398,7 +424,7 @@
             </div>
         </div>
         <div class="layer-6">
-            <input type="checkbox">
+            <button id="botonContador" onclick="incrementarContador()"></button>
             <div class="left-ear--outer"></div>
             <div class="left-ear--inter"></div>
             <div class="right-ear--outer"></div>
@@ -423,8 +449,45 @@
         <div class="layer-10">
             <div class="cloud"><span class='shadow'></span></div>
         </div>
-        <h3 class="total-cont">Score: </h3>
     </div>
     <footer>Creado por Alvaro Daza</footer>
 </body>
+<script>
+    let contador = 0;
+    let contadorActivo = true;
+    const tiempoDeseado = 30; // Tiempo en segundos
+    const botonContador = document.getElementById("botonContador");
+    const resultadoElemento = document.getElementById("resultado");
+    const avisoElemento = document.getElementById("aviso");
+
+    function incrementarContador() {
+      if (contadorActivo) {
+        contador++;
+        resultadoElemento.innerHTML = `Me has pegado ${contador} veces en <br>${tiempoDeseado} segundos.`;
+      }
+    }
+
+    function reiniciarConteo() {
+      contador = 0; // Restablecer el contador a 0
+      resultadoElemento.innerHTML = "";
+      contadorActivo = true; // Reactivar el contador
+      botonContador.disabled = false; // Habilitar el botón
+      avisoElemento.style.display = "none"; // Ocultar el elemento de aviso
+      setTimeout(mostrarResultado, tiempoDeseado * 1000);
+    }
+
+    function cancelarReinicio() {
+      avisoElemento.style.display = "none"; // Ocultar el elemento de aviso
+    }
+
+    function mostrarResultado() {
+      resultadoElemento.innerHTML = `El juego a finalizado. <br>Puntaje: ${contador}.`;
+      contadorActivo = false; // Desactivar el contador
+      botonContador.disabled = true; // Deshabilitar el botón
+      avisoElemento.style.display = "block"; // Mostrar el elemento de aviso
+      botonContador.removeEventListener("click", incrementarContador); // Eliminar el evento click
+    }
+
+    setTimeout(mostrarResultado, tiempoDeseado * 1000);
+  </script>
 </html>
